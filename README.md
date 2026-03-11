@@ -152,11 +152,188 @@ All of these can be added later without restructuring anything.
 ---
 # UART VIP Example Run
 
+# I2C VIP
+
+UVM-based I2C master VIP with a 256-byte I2C RAM slave DUT. Supports write, read, write-then-read-back, and bus scanning. Protocol checker assertions are in the interface.
+
+---
+
+## What it does
+
+- **Write:** sends START + device addr + register addr + data byte + STOP
+- **Read:** sends START + addr + reg addr + repeated START + addr + receives data + STOP
+- **Scanner:** probes all 128 I2C addresses and prints a table of found devices
+- **Write-read:** writes random bytes to random addresses then reads them back, scoreboard verifies
+
+---
+
+## How to run
+
+```bash
+cd scripts
+chmod +x run_questa.sh run_xrun.sh clean.sh
+
+./run_questa.sh    # Questa
+./run_xrun.sh      # Xcelium
+./clean.sh         # remove build artifacts
+```
+
+---
+
+## Folder structure
+
+```
+i2c_vip/
+├── if/
+│   └── i2c_if.sv              interface, open-drain SDA, debug signals, assertions
+│
+├── common/
+│   ├── i2c_seq_item.sv        one item = one I2C transaction (write/read/scan)
+│   └── i2c_cfg.sv             config: clocks_per_bit, target addr, mode
+│
+├── agent/
+│   ├── i2c_sequencer.sv       standard UVM sequencer
+│   ├── i2c_driver.sv          I2C master, generates SCL, drives SDA
+│   ├── i2c_monitor.sv         watches SCL/SDA, decodes transactions
+│   └── i2c_agent.sv           puts it all together
+│
+├── seq/
+│   ├── i2c_write_seq.sv       write one byte to one register address
+│   ├── i2c_read_seq.sv        read one byte from one register address
+│   ├── i2c_rw_seq.sv          write then read back N times (scoreboard friendly)
+│   └── i2c_scanner_seq.sv     scan all 128 addresses, print result table
+│
+├── env/
+│   ├── i2c_scoreboard.sv      shadow RAM tracks writes, verifies reads
+│   └── i2c_env.sv             agent + scoreboard, connects analysis ports
+│
+├── tests/
+│   └── i2c_rw_test.sv         runs write/read test
+│
+├── example_dut/
+│   └── i2c_ram_dut.sv         256-byte I2C slave RAM, address param SLAVE_ADDR
+│
+├── tb/
+│   └── example_tb_top.sv      top module, open-drain SDA wiring, wave dump
+│
+├── scripts/
+│   ├── run_questa.sh
+│   ├── run_xrun.sh
+│   ├── clean.sh
+│   ├── files.f
+│   └── how_to_run.txt
+│
+└── i2c_vip_pkg.sv             package, includes everything in right order
+```
+
+---
+
+## Compile order
+
+```
+1. i2c_if.sv
+2. i2c_vip_pkg.sv
+3. i2c_ram_dut.sv
+4. example_tb_top.sv
+```
+
+---
+
+## Open-drain SDA
+
+Real I2C uses open-drain SDA — both master and slave can pull it low, neither can drive it high. In simulation this is handled with wired-AND in the interface:
+
+```sv
+wire sda = mst_sda & slv_sda;
+// 1 = releasing (letting pull-up take it high)
+// 0 = actively pulling low
+```
+
+VIP driver drives `mst_sda`. DUT drives `slv_sda`. Both read `sda`.
+
+---
+
+## Protocol checker assertions
+
+The interface has four assertions:
+
+| Assertion | What it checks |
+|-----------|---------------|
+| chk_start_condition | SDA fell while SCL was LOW (bus contention) |
+| chk_sda_stable | SDA changed while SCL high during data transfer |
+| chk_scl_no_glitch | SCL went high then immediately low (glitch) |
+| chk_idle_after_reset | Bus not idle (both lines high) after reset |
+
+---
+
+## Debug signals in wave
+
+| Signal | What it shows |
+|--------|--------------|
+| u_if.scl | I2C clock |
+| u_if.sda | resolved SDA bus |
+| u_if.dbg_drv_addr | device address driver is targeting |
+| u_if.dbg_drv_rw | 0=write 1=read |
+| u_if.dbg_drv_reg | register address being accessed |
+| u_if.dbg_drv_wdata | byte being written |
+| u_if.dbg_drv_start | pulse on each START |
+| u_if.dbg_drv_stop | pulse on each STOP |
+| u_if.dbg_mon_shift | byte building up bit by bit in monitor |
+| u_if.dbg_mon_bitcnt | which bit the monitor is on |
+| u_if.dbg_mon_data | fully decoded byte |
+| u_if.dbg_mon_valid | pulse when full transaction captured |
+| u_if.dbg_scan_addr | address being probed during scan |
+| u_if.dbg_scan_found | pulse when a device is found |
+| u_dut.state | DUT slave FSM state |
+| u_dut.reg_ptr | current RAM address pointer |
+| u_dut.shift_reg | incoming bits shifting in |
+
+---
+
+## DUT parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| SLAVE_ADDR | 7'h50 | I2C slave address |
+
+---
+
+## clocks_per_bit
+
+Controls I2C speed. Formula: `baud = clk_freq / clocks_per_bit`
+
+Example with 100 MHz clock:
+
+```
+clocks_per_bit = 20   -> 5 MHz    (simulation, fast)
+clocks_per_bit = 250  -> 400 kHz  (Fast mode)
+clocks_per_bit = 1000 -> 100 kHz  (Standard mode)
+```
+
+Keep it small in simulation. Does not matter what the actual frequency is as long as DUT and VIP use the same value.
+
+---
+
+## First version limitations
+
+- Single master only
+- Single byte data per transaction (no burst)
+- No clock stretching
+- No 10-bit addressing
+- No functional coverage
+- No multi-slave test (scanner finds them but no coordinated test)
+
+All extendable without restructuring.
+
+---
+
+## Example Simulation Output
+
 <details>
-<summary>📋 Simulation Log — xrun result</summary>
+<summary>📋 xrun simulation log — uart_test (8 bytes, all PASS)</summary>
+
 ```
 ./run_xrun.sh 
-  
 Running from: /myuart/scripts
 xrun(64)
 Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location $XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d
@@ -175,125 +352,52 @@ file: ../example_dut/uart_dut.sv
 file: ../tb/example_tb_top.sv
 	module worklib.example_tb_top:sv
 		errors: 0, warnings: 0
-xmvlog: *W,SPDUSD: Include directory .. given but not used.
-xmvlog: *W,SPDUSD: Include directory ../common given but not used.
-xmvlog: *W,SPDUSD: Include directory ../agent given but not used.
-xmvlog: *W,SPDUSD: Include directory ../env given but not used.
-xmvlog: *W,SPDUSD: Include directory ../seq given but not used.
-xmvlog: *W,SPDUSD: Include directory ../tests given but not used.
-xmvlog: *W,SPDUSD: Include directory ../if given but not used.
-xmvlog: *W,SPDUSD: Include directory ../tb given but not used.
-	Total errors/warnings found outside modules and primitives:
-		errors: 0, warnings: 8
-	Elaborating the design hierarchy:
-		Caching library 'worklib' ....... Done
-	Top level design units:
-		uvm_pkg
-		cdns_uvmapi
-		cdns_assert2uvm_pkg
-		cdns_uvm_pkg
-		uart_vip_pkg
-		example_tb_top
-	Building instance overlay tables: .................... Done
-	Generating native compiled code:
-		worklib.uart_dut:sv <0x001aa707>
-			streams:  29, words: 13319
-		worklib.example_tb_top:sv <0x40132002>
-			streams: 655, words: 748752
-		worklib.cdns_uvm_pkg:sv <0x33f50eda>
-			streams: 172, words: 276655
-		worklib.cdns_uvmapi:svp <0x1e16c06d>
-			streams:  27, words: 30445
-		worklib.cdns_assert2uvm_pkg:sv <0x321baa8b>
-			streams:   3, words:  1761
-		worklib.uvm_pkg:sv <0x6fc26867>
-			streams: 4534, words: 7150938
-	Building instance specific data structures.
-	Loading native compiled code:     .................... Done
-	Design hierarchy summary:
-		                        Instances  Unique
-		Modules:                        2       2
-		Interfaces:                     1       1
-		Verilog packages:               5       5
-		Registers:                 14,243  10,256
-		Scalar wires:                  13       -
-		Vectored wires:                18       -
-		Named events:                   4      12
-		Always blocks:                  4       4
-		Initial blocks:               292     159
-		Parallel blocks:               26      27
-		Cont. assignments:              7       8
-		Pseudo assignments:            12       -
-		Assertions:                     2       2
-		SV Class declarations:        200     313
-		SV Class specializations:     388     388
-		Process Clocks:                 3       1
-	Writing initial simulation snapshot: worklib.example_tb_top:sv
-Loading snapshot worklib.example_tb_top:sv .................... Done
-SVSEED default: 1
-Simulation SnapShot is worklib.example_tb_top:sv
 
-xcelium> source $XRUN_INSTALLATION/xcelium/files/xmsimrc
-xcelium> source $XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d/additions/sv/files/tcl/uvm_sim.tcl
-xcelium> run
-----------------------------------------------------------------
-CDNS-UVM-1.1d
----------------------------------------------------------------
+	Elaborating the design hierarchy:
+	Top level design units:
+		uvm_pkg / uart_vip_pkg / example_tb_top
+	Design hierarchy summary:
+		Modules: 2  |  Interfaces: 1  |  Registers: 14,243
+		SV Class declarations: 200  |  Assertions: 2
+
+Loading snapshot worklib.example_tb_top:sv .................... Done
 
 UVM_INFO @ 0: reporter [RNTST] Running test uart_test...
 UVM_INFO ../tests/uart_test.sv(57) @ 0: uvm_test_top [uart_test] Test is starting, 8 bytes will be sent
 UVM_INFO ../tb/example_tb_top.sv(49) @ 80: reporter [TB_TOP] Reset deasserted
-UVM_INFO ../agent/uart_monitor.sv(99) @ 3715: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'he6 (11100110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 3715: uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'he6 (11100110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 5325: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h13 (00010011)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 5325: uvm_test_top.env.sb [uart_scoreboard] PASS [2]  data=8'h13 (00010011)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 6935: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h6e (01101110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 6935: uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'h6e (01101110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 8545: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hf6 (11110110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 8545: uvm_test_top.env.sb [uart_scoreboard] PASS [4]  data=8'hf6 (11110110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 10155: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hab (10101011)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
+
+UVM_INFO ../agent/uart_monitor.sv(99) @ 3715:  uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'he6 (11100110)  parity_ok=1 framing_ok=1
+UVM_INFO ../env/uart_scoreboard.sv(54) @ 3715:  uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'he6 (11100110)
+UVM_INFO ../agent/uart_monitor.sv(99) @ 5325:  uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h13 (00010011)  parity_ok=1 framing_ok=1
+UVM_INFO ../env/uart_scoreboard.sv(54) @ 5325:  uvm_test_top.env.sb [uart_scoreboard] PASS [2]  data=8'h13 (00010011)
+UVM_INFO ../agent/uart_monitor.sv(99) @ 6935:  uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h6e (01101110)  parity_ok=1 framing_ok=1
+UVM_INFO ../env/uart_scoreboard.sv(54) @ 6935:  uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'h6e (01101110)
+UVM_INFO ../agent/uart_monitor.sv(99) @ 8545:  uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hf6 (11110110)  parity_ok=1 framing_ok=1
+UVM_INFO ../env/uart_scoreboard.sv(54) @ 8545:  uvm_test_top.env.sb [uart_scoreboard] PASS [4]  data=8'hf6 (11110110)
+UVM_INFO ../agent/uart_monitor.sv(99) @ 10155: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hab (10101011)  parity_ok=1 framing_ok=1
 UVM_INFO ../env/uart_scoreboard.sv(54) @ 10155: uvm_test_top.env.sb [uart_scoreboard] PASS [5]  data=8'hab (10101011)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 11765: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h8e (10001110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
+UVM_INFO ../agent/uart_monitor.sv(99) @ 11765: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h8e (10001110)  parity_ok=1 framing_ok=1
 UVM_INFO ../env/uart_scoreboard.sv(54) @ 11765: uvm_test_top.env.sb [uart_scoreboard] PASS [6]  data=8'h8e (10001110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 13375: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h9d (10011101)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
+UVM_INFO ../agent/uart_monitor.sv(99) @ 13375: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h9d (10011101)  parity_ok=1 framing_ok=1
 UVM_INFO ../env/uart_scoreboard.sv(54) @ 13375: uvm_test_top.env.sb [uart_scoreboard] PASS [7]  data=8'h9d (10011101)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 14985: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hda (11011010)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
+UVM_INFO ../agent/uart_monitor.sv(99) @ 14985: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hda (11011010)  parity_ok=1 framing_ok=1
 UVM_INFO ../env/uart_scoreboard.sv(54) @ 14985: uvm_test_top.env.sb [uart_scoreboard] PASS [8]  data=8'hda (11011010)
+
 UVM_INFO ../tests/uart_test.sv(68) @ 51775: uvm_test_top [uart_test] Test is done, dropping objection now
-UVM_INFO $XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_objection.svh(1268) @ 51775: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
 UVM_INFO ../env/uart_scoreboard.sv(62) @ 51775: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=8  FAIL=0 ----
 
---- UVM Report catcher Summary ---
-
-
-Number of demoted UVM_FATAL reports  :    0
-Number of demoted UVM_ERROR reports  :    0
-Number of demoted UVM_WARNING reports:    0
-Number of caught UVM_FATAL reports   :    0
-Number of caught UVM_ERROR reports   :    0
-Number of caught UVM_WARNING reports :    0
-
 --- UVM Report Summary ---
-
-** Report counts by severity
-UVM_INFO :   22
+UVM_INFO    :   22
 UVM_WARNING :    0
-UVM_ERROR :    0
-UVM_FATAL :    0
-** Report counts by id
-[RNTST]     1
-[TB_TOP]     1
-[TEST_DONE]     1
-[uart_monitor]     8
-[uart_scoreboard]     9
-[uart_test]     2
-Simulation complete via $finish(1) at time 51775 NS + 45
-$XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_root.svh:457     $finish;
-xcelium> exit
-Simulation time at exit is: 51775000000 FS
-TOOL:	xrun(64)```
+UVM_ERROR   :    0
+UVM_FATAL   :    0
+
+Simulation complete via $finish(1) at time 51775 NS
+```
 
 </details>
+
+
 # Waveform Guide — UART VIP Example
 
 This guide walks through the simulation waveforms produced by the UART VIP
