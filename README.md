@@ -147,3 +147,105 @@ Parameters:
 - one agent, not separate TX/RX agents
 
 All of these can be added later without restructuring anything.
+
+---
+---
+# UART VIP Example Run
+
+./run_xrun.sh 
+Running from: /myuart/scripts
+xrun(64)
+Compiling UVM packages...
+...
+UVM_INFO @ 0: reporter [RNTST] Running test uart_test...
+UVM_INFO ../tests/uart_test.sv(57) @ 0: uvm_test_top [uart_test] Test is starting, 8 bytes will be sent
+...
+UVM_INFO ../env/uart_scoreboard.sv(54) @ 14985: uvm_test_top.env.sb [uart_scoreboard] PASS [8]  data=8'hda (11011010)
+UVM_INFO ../env/uart_scoreboard.sv(62) @ 51775: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=8  FAIL=0 ----
+
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :   22
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+
+Simulation complete via $finish(1) at time 51775 NS + 45
+TOOL:	xrun(64)
+
+# Waveform Guide — UART VIP Example
+
+This guide walks through the simulation waveforms produced by the UART VIP
+example testbench. Open `dump.vcd` in SimVision or GTKWave and add the signals
+listed below to follow along.
+
+---
+
+## Overview — Full Simulation (0 – 16 µs)
+
+![Full simulation waveform](tb/wave_uart_wide.png)
+
+The wide view shows the complete test run. Each "step" visible in
+`drv_tx_data` is one transmitted byte. The sequence sent is:
+
+```
+0x85 → 0x13 → 0x6E → 0xF5 → 0xAB → 0x5E → 0x5D → 0xDA
+```
+
+`drv_tx_valid` stays high for the duration of each frame and drops between
+transactions. `mon_rx_valid` pulses once per received byte — you can count
+the pulses to verify every byte was captured by the monitor.
+
+`mon_rx_shift` is the live shift register. Watch it fill in from left to
+right as each bit arrives on `rx`. This is intentional — it lets you see
+the byte being assembled without having to read the raw serial line.
+
+---
+
+## Zoom — First Transaction: 0xE6
+
+![First transaction zoom](tb/wave_uart_tx_e6_and_reflect.png)
+
+This zoomed view covers roughly 0 – 3 µs and shows the first two frames
+in detail.
+
+### Reset and bus idle
+
+`rst_n` is low at the start and deasserts cleanly. After reset, `tx` and
+`rx` both sit at logic 1 (UART idle). `drv_tx_data` and `mon_rx_shift`
+hold 0x00.
+
+### Frame 1 — transmitting 0xE6
+
+Once `rst_n` goes high the driver waits one baud period then begins the
+first frame. With `CLKS_PER_BIT = 0x10` (16 cycles) and a 10 ns clock,
+each bit is 160 ns wide.
+
+**TX line sequence for 0xE6 (1110 0110):**
+
+```
+Idle  START  b0  b1  b2  b3  b4  b5  b6  b7  STOP
+  1     0     0   1   1   0   0   0   1   1   1
+```
+
+You can follow this directly on the `tx` signal.
+
+At the same time, `dbg_rx_bit_idx` counts 1 → 2 → 3 → … → 7 → 0 as the
+DUT's receiver steps through the frame. The counter resets to 0 at the stop
+bit, matching the expected 8-bit frame width (`DATA_BITS = 8`).
+
+**Monitor assembling the byte:**
+
+`mon_rx_shift` starts at 0x00 and updates every bit period. Watch it pass
+through intermediate values as bits arrive, then lock to `0xE6` once all
+8 data bits are sampled. At that point `mon_rx_valid` pulses for exactly
+one clock cycle and `mon_rx_data` latches `0xE6`.
+
+### Echo path
+
+`ECHO_DELAY = 0xA` (10 cycles). After the DUT receives the byte it drives
+the echo back on `rx` after a 10-cycle delay. The second frame on `rx` is
+therefore `0xE6` again, offset from the original by 10 × 10 ns = 100 ns.
+The monitor decodes the echo identically — `mon_rx_valid` pulses a second
+time and `mon_rx_data` again shows `0xE6`.
