@@ -151,7 +151,8 @@ All of these can be added later without restructuring anything.
 ---
 ---
 # UART VIP Example Run
-The test sends 8 random bytes through the UART DUT and reads them back via the echo path. The monitor decodes each frame independently and the scoreboard compares every received byte against what the driver sent. All 8 transactions pass with zero UVM errors or warnings. Total simulation time is 51.775 µs with a 10 ns clock and CLKS_PER_BIT = 16.
+The test sends 8 random bytes through the UART DUT and reads them back via the echo path. The monitor decodes each frame independently and the scoreboard compares every received byte against what the driver sent. All 8 transactions pass with zero UVM errors or warnings.
+10 ns clock and CLKS_PER_BIT = 16.
 
 <details>
 <summary>📋 xrun simulation log — uart_test (8 bytes, all PASS)</summary>
