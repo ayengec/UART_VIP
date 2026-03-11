@@ -1,0 +1,17 @@
+HOW TO USE THE SCRIPTS
+
+chmod +x scripts/run_questa.sh
+chmod +x scripts/run_xrun.sh
+chmod +x scripts/clean.sh
+
+cd scripts
+./run_questa.sh
+
+OR
+
+cd scripts
+./run_xrun.sh
+
+to clean:
+cd scripts
+./clean.sh
