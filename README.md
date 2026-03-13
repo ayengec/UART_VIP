@@ -293,7 +293,7 @@ listed below to follow along.
 
 ---
 
-## Overview — Full Simulation (0 – 16 µs)
+## Overview — Full Simulation (0 – 8 µs)
 
 ![Full simulation waveform](tb/wide_e6.png)
 
@@ -301,7 +301,6 @@ The wide view shows the complete test run. Each "step" visible in
 `drv_tx_data` is one transmitted byte. The sequence sent is:
 
 ```
-0x85 → 0x13 → 0x6E → 0xF5 → 0xAB → 0x5E → 0x5D → 0xDA
 ```
 
 `drv_tx_valid` stays high for the duration of each frame and drops between
@@ -318,7 +317,7 @@ the byte being assembled without having to read the raw serial line.
 
 ![First transaction zoom](tb/e6_zoom.png)
 
-This zoomed view covers roughly 0 – 3 µs and shows the first two frames
+This zoomed view covers roughly 0 – 2 µs and shows the first two frames
 in detail.
 
 ### Reset and bus idle
