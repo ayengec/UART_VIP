@@ -1,7 +1,7 @@
-./run_xrun.sh 
-Running from: /myuart/scripts
-xrun(64)
-Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location $XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d
+>>./run_xrun.sh
+Running from: ./scripts
+TOOL:	xrun(64)
+Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv)
 file: ../if/uart_if.sv
 	interface worklib.uart_if:sv
 		errors: 0, warnings: 0
@@ -38,18 +38,18 @@ xmvlog: *W,SPDUSD: Include directory ../tb given but not used.
 		example_tb_top
 	Building instance overlay tables: .................... Done
 	Generating native compiled code:
-		worklib.uart_dut:sv <0x001aa707>
+		worklib.uart_dut:sv <0x70f08765>
 			streams:  29, words: 13319
-		worklib.example_tb_top:sv <0x40132002>
-			streams: 655, words: 748752
-		worklib.cdns_uvm_pkg:sv <0x33f50eda>
+		worklib.example_tb_top:sv <0x051afa12>
+			streams: 659, words: 753352
+		worklib.cdns_uvm_pkg:sv <0x40cb8f18>
 			streams: 172, words: 276655
-		worklib.cdns_uvmapi:svp <0x1e16c06d>
+		worklib.cdns_uvmapi:svp <0x538b9174>
 			streams:  27, words: 30445
-		worklib.cdns_assert2uvm_pkg:sv <0x321baa8b>
+		worklib.cdns_assert2uvm_pkg:sv <0x223d1a4c>
 			streams:   3, words:  1761
-		worklib.uvm_pkg:sv <0x6fc26867>
-			streams: 4534, words: 7150938
+		worklib.uvm_pkg:sv <0x19e0a4d0>
+			streams: 4534, words: 7150936
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
@@ -57,53 +57,39 @@ xmvlog: *W,SPDUSD: Include directory ../tb given but not used.
 		Modules:                        2       2
 		Interfaces:                     1       1
 		Verilog packages:               5       5
-		Registers:                 14,243  10,256
+		Registers:                 14,246  10,279
 		Scalar wires:                  13       -
 		Vectored wires:                18       -
 		Named events:                   4      12
 		Always blocks:                  4       4
-		Initial blocks:               292     159
+		Initial blocks:               291     159
 		Parallel blocks:               26      27
 		Cont. assignments:              7       8
 		Pseudo assignments:            12       -
 		Assertions:                     2       2
-		SV Class declarations:        200     313
+		SV Class declarations:        201     315
 		SV Class specializations:     388     388
 		Process Clocks:                 3       1
 	Writing initial simulation snapshot: worklib.example_tb_top:sv
 Loading snapshot worklib.example_tb_top:sv .................... Done
 SVSEED default: 1
+
 Simulation SnapShot is worklib.example_tb_top:sv
 
-xcelium> source $XRUN_INSTALLATION/xcelium/files/xmsimrc
-xcelium> source $XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d/additions/sv/files/tcl/uvm_sim.tcl
 xcelium> run
-----------------------------------------------------------------
-CDNS-UVM-1.1d
----------------------------------------------------------------
 
 UVM_INFO @ 0: reporter [RNTST] Running test uart_test...
-UVM_INFO ../tests/uart_test.sv(57) @ 0: uvm_test_top [uart_test] Test is starting, 8 bytes will be sent
+UVM_INFO ../tests/uart_test.sv(83) @ 0: uvm_test_top [uart_test] Test starting, 3 bytes will be sent
 UVM_INFO ../tb/example_tb_top.sv(49) @ 80: reporter [TB_TOP] Reset deasserted
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 3715: uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'he6 (11100110)
 UVM_INFO ../agent/uart_monitor.sv(99) @ 3715: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'he6 (11100110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 3715: uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'he6 (11100110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 5325: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h13 (00010011)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 5325: uvm_test_top.env.sb [uart_scoreboard] PASS [2]  data=8'h13 (00010011)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 6935: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h6e (01101110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 6935: uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'h6e (01101110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 8545: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hf6 (11110110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 8545: uvm_test_top.env.sb [uart_scoreboard] PASS [4]  data=8'hf6 (11110110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 10155: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hab (10101011)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 10155: uvm_test_top.env.sb [uart_scoreboard] PASS [5]  data=8'hab (10101011)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 11765: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h8e (10001110)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 11765: uvm_test_top.env.sb [uart_scoreboard] PASS [6]  data=8'h8e (10001110)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 13375: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h9d (10011101)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 13375: uvm_test_top.env.sb [uart_scoreboard] PASS [7]  data=8'h9d (10011101)
-UVM_INFO ../agent/uart_monitor.sv(99) @ 14985: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'hda (11011010)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
-UVM_INFO ../env/uart_scoreboard.sv(54) @ 14985: uvm_test_top.env.sb [uart_scoreboard] PASS [8]  data=8'hda (11011010)
-UVM_INFO ../tests/uart_test.sv(68) @ 51775: uvm_test_top [uart_test] Test is done, dropping objection now
-UVM_INFO $XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_objection.svh(1268) @ 51775: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
-UVM_INFO ../env/uart_scoreboard.sv(62) @ 51775: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=8  FAIL=0 ----
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 5325: uvm_test_top.env.sb [uart_scoreboard] PASS [2]  data=8'ha5 (10100101)
+UVM_INFO ../agent/uart_monitor.sv(99) @ 5325: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'ha5 (10100101)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 6935: uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'h3c (00111100)
+UVM_INFO ../agent/uart_monitor.sv(99) @ 6935: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h3c (00111100)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
+UVM_INFO ../tests/uart_test.sv(91) @ 27725: uvm_test_top [uart_test] Test done.
+UVM_INFO /methodology/UVM/CDNS-1.1d/sv/src/base/uvm_objection.svh(1268) @ 27725: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+UVM_INFO ../env/uart_scoreboard.sv(104) @ 27725: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=3  FAIL=0 ----
 
 --- UVM Report catcher Summary ---
 
@@ -118,7 +104,7 @@ Number of caught UVM_WARNING reports :    0
 --- UVM Report Summary ---
 
 ** Report counts by severity
-UVM_INFO :   22
+UVM_INFO :   12
 UVM_WARNING :    0
 UVM_ERROR :    0
 UVM_FATAL :    0
@@ -126,11 +112,10 @@ UVM_FATAL :    0
 [RNTST]     1
 [TB_TOP]     1
 [TEST_DONE]     1
-[uart_monitor]     8
-[uart_scoreboard]     9
+[uart_monitor]     3
+[uart_scoreboard]     4
 [uart_test]     2
-Simulation complete via $finish(1) at time 51775 NS + 45
-$XRUN_INSTALLATION/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_root.svh:457     $finish;
+Simulation complete via $finish(1) at time 27725 NS + 45
+$finish;
 xcelium> exit
-Simulation time at exit is: 51775000000 FS
-TOOL:	xrun(64)
+Simulation time at exit is: 27725000000 FS
