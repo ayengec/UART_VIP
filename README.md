@@ -295,7 +295,7 @@ listed below to follow along.
 
 ## Overview — Full Simulation (0 – 16 µs)
 
-![Full simulation waveform](tb/wave_uart_wide.png)
+![Full simulation waveform](tb/wide_e6.png)
 
 The wide view shows the complete test run. Each "step" visible in
 `drv_tx_data` is one transmitted byte. The sequence sent is:
@@ -316,7 +316,7 @@ the byte being assembled without having to read the raw serial line.
 
 ## Zoom — First Transaction: 0xE6
 
-![First transaction zoom](tb/wave_uart_tx_e6_and_reflect.png)
+![First transaction zoom](tb/e6_zoom.png)
 
 This zoomed view covers roughly 0 – 3 µs and shows the first two frames
 in detail.
