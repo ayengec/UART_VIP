@@ -44,7 +44,7 @@ uart_vip/
 │   └── uart_agent.sv           puts sequencer+driver+monitor together
 │
 ├── seq/
-│   └── uart_tx_seq.sv          sends N random bytes, also feeds scoreboard mailbox
+│   └── uart_tx_seq.sv          sends N random bytes, also feeds scoreboard
 │
 ├── env/
 │   ├── uart_scoreboard.sv      compares expected vs actual, reports pass/fail
