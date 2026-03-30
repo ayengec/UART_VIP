@@ -1,0 +1,37 @@
+============================================
+  UART VIP - Full Regression (Xcelium)
+  Started : --xx
+  Run tag : --xx
+  Seed    : 1
+  Clean   : 2 tests
+  Expect  : 1 tests (protocol errors expected)
+============================================
+
+---- Compiling (once) ----
+  COMPILE : OK  (log -> regression_compile.log)
+
+---- [CLEAN] uart_test ----
+  RESULT : PASS
+
+---- [CLEAN] uart_cov_data_test ----
+  RESULT : PASS
+
+---- [EXPECT] uart_error_test ----
+  RESULT : XFAIL  (6 expected UVM_ERROR(s), no UVM_FATAL - OK; xrun_rc=1 ignored)
+
+---- Generating coverage HTML report ----
+  COVERAGE : HTML report generated -> cov_report_html_20260330_025554/index.html
+
+============================================
+  REGRESSION SUMMARY
+  Finished : --xx
+============================================
+  PASS  : 2
+    [PASS]  uart_test
+    [PASS]  uart_cov_data_test
+  XFAIL : 1  (error injection - UVM_ERROR expected)
+    [XFAIL] uart_error_test
+  FAIL  : 0
+    [FAIL]  
+============================================
+  ALL TESTS PASSED

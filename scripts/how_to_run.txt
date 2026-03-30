@@ -1,17 +1,39 @@
-HOW TO USE THE SCRIPTS
+HOW TO RUN — UART VIP v2
 
-chmod +x scripts/run_questa.sh
-chmod +x scripts/run_xrun.sh
-chmod +x scripts/clean.sh
+------- Single test -------
 
 cd scripts
-./run_questa.sh
+chmod +x run_xrun.sh run_xrun_regression.sh run_questa.sh clean.sh
 
-OR
-
-cd scripts
+# Xcelium — default test (uart_test)
 ./run_xrun.sh
 
-to clean:
-cd scripts
+# Xcelium — specific test
+./run_xrun.sh uart_error_test
+
+# Xcelium — specific test with higher verbosity
+./run_xrun.sh uart_test UVM_MEDIUM
+
+# Questa — default test
+./run_questa.sh
+
+------- Full regression -------
+
+./run_xrun_regression.sh
+
+Results:
+  regression_summary.log       -> overall pass/fail table
+  regression_compile.log       -> compile output
+  regression_<testname>.log    -> per-test sim output
+
+------- Clean -------
+
 ./clean.sh
+
+------- Test categories -------
+
+CLEAN  (must have zero UVM_ERROR and zero UVM_FATAL):
+  uart_test
+
+EXPECT (UVM_ERROR expected from error injection, UVM_FATAL never OK):
+  uart_error_test

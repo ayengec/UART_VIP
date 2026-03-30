@@ -1,0 +1,76 @@
+
+
+UVM_INFO @ 0: reporter [RNTST] Running test uart_cov_data_test...
+UVM_INFO ../tests/uart_cov_data_test.sv(162) @ 0: uvm_test_top [uart_cov_data_test] Coverage data test starting, 30 bytes will be sent
+UVM_INFO ../tb/example_tb_top.sv(49) @ 80000: reporter [TB_TOP] Reset deasserted
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 3715000: uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'h00 (00000000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 5325000: uvm_test_top.env.sb [uart_scoreboard] PASS [2]  data=8'h00 (00000000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 6935000: uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'hff (11111111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 8545000: uvm_test_top.env.sb [uart_scoreboard] PASS [4]  data=8'hff (11111111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 10155000: uvm_test_top.env.sb [uart_scoreboard] PASS [5]  data=8'h00 (00000000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 11765000: uvm_test_top.env.sb [uart_scoreboard] PASS [6]  data=8'h12 (00010010)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 13375000: uvm_test_top.env.sb [uart_scoreboard] PASS [7]  data=8'ha5 (10100101)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 14985000: uvm_test_top.env.sb [uart_scoreboard] PASS [8]  data=8'he6 (11100110)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 16595000: uvm_test_top.env.sb [uart_scoreboard] PASS [9]  data=8'h55 (01010101)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 18205000: uvm_test_top.env.sb [uart_scoreboard] PASS [10]  data=8'haa (10101010)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 19815000: uvm_test_top.env.sb [uart_scoreboard] PASS [11]  data=8'h01 (00000001)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 21425000: uvm_test_top.env.sb [uart_scoreboard] PASS [12]  data=8'h02 (00000010)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 23035000: uvm_test_top.env.sb [uart_scoreboard] PASS [13]  data=8'h04 (00000100)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 24645000: uvm_test_top.env.sb [uart_scoreboard] PASS [14]  data=8'h08 (00001000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 26255000: uvm_test_top.env.sb [uart_scoreboard] PASS [15]  data=8'h10 (00010000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 27865000: uvm_test_top.env.sb [uart_scoreboard] PASS [16]  data=8'h20 (00100000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 29475000: uvm_test_top.env.sb [uart_scoreboard] PASS [17]  data=8'h40 (01000000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 31085000: uvm_test_top.env.sb [uart_scoreboard] PASS [18]  data=8'h80 (10000000)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 32695000: uvm_test_top.env.sb [uart_scoreboard] PASS [19]  data=8'hfe (11111110)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 34305000: uvm_test_top.env.sb [uart_scoreboard] PASS [20]  data=8'hfd (11111101)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 35915000: uvm_test_top.env.sb [uart_scoreboard] PASS [21]  data=8'hfb (11111011)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 37525000: uvm_test_top.env.sb [uart_scoreboard] PASS [22]  data=8'hf7 (11110111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 39135000: uvm_test_top.env.sb [uart_scoreboard] PASS [23]  data=8'hef (11101111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 40745000: uvm_test_top.env.sb [uart_scoreboard] PASS [24]  data=8'hdf (11011111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 42355000: uvm_test_top.env.sb [uart_scoreboard] PASS [25]  data=8'hbf (10111111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 43965000: uvm_test_top.env.sb [uart_scoreboard] PASS [26]  data=8'h7f (01111111)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 45575000: uvm_test_top.env.sb [uart_scoreboard] PASS [27]  data=8'h3c (00111100)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 47185000: uvm_test_top.env.sb [uart_scoreboard] PASS [28]  data=8'h5a (01011010)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 48795000: uvm_test_top.env.sb [uart_scoreboard] PASS [29]  data=8'h96 (10010110)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 50405000: uvm_test_top.env.sb [uart_scoreboard] PASS [30]  data=8'hc3 (11000011)
+UVM_INFO ../tests/uart_cov_data_test.sv(172) @ 157595000: uvm_test_top [uart_cov_data_test] Coverage data test done.
+UVM_INFO ../env/uart_coverage.sv(177) @ 157595000: uvm_test_top.env.coverage [uart_coverage] 
+========== UART Functional Coverage ==========
+  cg_data_value       : 100.0%
+  cg_frame_integrity  :  41.7%
+  cg_parity_cfg       :  33.3%
+  cg_stop_bits        :  50.0%
+  cg_data_transitions : 100.0%
+  cg_error_types      :  50.0%
+  -----------------------------------------------
+  TOTAL               :  62.5%
+===============================================
+UVM_INFO ../env/uart_scoreboard.sv(104) @ 157595000: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=30  FAIL=0 ----
+
+--- UVM Report catcher Summary ---
+
+
+Number of demoted UVM_FATAL reports  :    0
+Number of demoted UVM_ERROR reports  :    0
+Number of demoted UVM_WARNING reports:    0
+Number of caught UVM_FATAL reports   :    0
+Number of caught UVM_ERROR reports   :    0
+Number of caught UVM_WARNING reports :    0
+
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :   37
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[RNTST]     1
+[TB_TOP]     1
+[TEST_DONE]     1
+[uart_cov_data_test]     2
+[uart_coverage]     1
+[uart_scoreboard]    31
+Simulation complete via $finish(1) at time 157595 NS + 45
+xcelium> exit
+Simulation time at exit is: 157595000000 FS

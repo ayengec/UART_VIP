@@ -1,0 +1,61 @@
+UVM_INFO @ 0: reporter [RNTST] Running test uart_error_test...
+UVM_INFO ../tests/uart_error_test.sv(116) @ 0: uvm_test_top [uart_error_test] uart_error_test starting - expect UVM_ERROR messages for injected faults
+UVM_INFO ../tb/example_tb_top.sv(49) @ 80000: reporter [TB_TOP] Reset deasserted
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 3715000: uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'haa (10101010)
+UVM_INFO ../seq/uart_error_seq.sv(40) @ 3715000: uvm_test_top.env.agent.seqr@@seq.bad_stop_s [uart_bad_stop_seq] Injected bad stop bit - data=8'hde (11011110)  parity_en=0 parity_odd=x stop_bits=1  parity_ok=0 framing_ok=0  [ERR inj: bad_stop=1 bad_parity=0 glitch=0 break=0]
+UVM_ERROR ../env/uart_scoreboard.sv(83) @ 5325000: uvm_test_top.env.sb [uart_scoreboard] DATA MISMATCH  expected=8'h55(01010101)  actual=8'hde(11011110)
+UVM_ERROR ../env/uart_scoreboard.sv(83) @ 6935000: uvm_test_top.env.sb [uart_scoreboard] DATA MISMATCH  expected=8'hcc(11001100)  actual=8'h55(01010101)
+UVM_INFO ../seq/uart_error_seq.sv(69) @ 6935000: uvm_test_top.env.agent.seqr@@seq.bad_par_s [uart_bad_parity_seq] Injected bad parity - data=8'hbe (10111110)  parity_en=1 parity_odd=0 stop_bits=1  parity_ok=0 framing_ok=0  [ERR inj: bad_stop=0 bad_parity=1 glitch=0 break=0]
+UVM_ERROR ../env/uart_scoreboard.sv(83) @ 8545000: uvm_test_top.env.sb [uart_scoreboard] DATA MISMATCH  expected=8'hab(10101011)  actual=8'hbe(10111110)
+UVM_ERROR ../env/uart_scoreboard.sv(83) @ 10155000: uvm_test_top.env.sb [uart_scoreboard] DATA MISMATCH  expected=8'h12(00010010)  actual=8'hcc(11001100)
+UVM_INFO ../seq/uart_error_seq.sv(97) @ 10155000: uvm_test_top.env.agent.seqr@@seq.glitch_s [uart_glitch_seq] Injected glitch + valid frame - data=8'hab (10101011)  parity_en=0 parity_odd=x stop_bits=1  parity_ok=0 framing_ok=0  [ERR inj: bad_stop=0 bad_parity=0 glitch=1 break=0]
+UVM_ERROR ../env/uart_scoreboard.sv(83) @ 11765000: uvm_test_top.env.sb [uart_scoreboard] DATA MISMATCH  expected=8'hff(11111111)  actual=8'hab(10101011)
+UVM_INFO ../seq/uart_error_seq.sv(119) @ 13375000: uvm_test_top.env.agent.seqr@@seq.break_s [uart_break_seq] Injected UART break condition
+UVM_INFO ../seq/uart_error_seq.sv(180) @ 14985000: uvm_test_top.env.agent.seqr@@seq [uart_error_mix_seq] uart_error_mix_seq done
+xmsim: *E,ASRTST (../if/uart_assertions.sv,94): (time 14985 NS) Assertion example_tb_top.u_dut.u_assertions.AST_RX_DATA_STABLE has failed
+RX data X/Z
+UVM_INFO ../tests/uart_error_test.sv(125) @ 117385000: uvm_test_top [uart_error_test] uart_error_test done.
+UVM_ERROR ../env/uart_scoreboard.sv(95) @ 117385000: uvm_test_top.env.sb [uart_scoreboard] 3 actual item(s) left unmatched in queue
+UVM_INFO ../env/uart_coverage.sv(177) @ 117385000: uvm_test_top.env.coverage [uart_coverage] 
+========== UART Functional Coverage ==========
+  cg_data_value       :  29.2%
+  cg_frame_integrity  :  41.7%
+  cg_parity_cfg       :  33.3%
+  cg_stop_bits        :  50.0%
+  cg_data_transitions :  33.3%
+  cg_error_types      :  50.0%
+  -----------------------------------------------
+  TOTAL               :  39.6%
+===============================================
+UVM_INFO ../env/uart_scoreboard.sv(104) @ 117385000: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=1  FAIL=5 ----
+
+--- UVM Report catcher Summary ---
+
+
+Number of demoted UVM_FATAL reports  :    0
+Number of demoted UVM_ERROR reports  :    0
+Number of demoted UVM_WARNING reports:    0
+Number of caught UVM_FATAL reports   :    0
+Number of caught UVM_ERROR reports   :    0
+Number of caught UVM_WARNING reports :    0
+
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :   13
+UVM_WARNING :    0
+UVM_ERROR :    6
+UVM_FATAL :    0
+** Report counts by id
+[RNTST]     1
+[TB_TOP]     1
+[TEST_DONE]     1
+[uart_bad_parity_seq]     1
+[uart_bad_stop_seq]     1
+[uart_break_seq]     1
+[uart_coverage]     1
+[uart_error_mix_seq]     1
+[uart_error_test]     2
+[uart_glitch_seq]     1
+[uart_scoreboard]     8
+Simulation complete via $finish(1) at time 117385 NS + 45

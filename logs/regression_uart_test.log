@@ -1,0 +1,59 @@
+UVM_INFO @ 0: reporter [RNTST] Running test uart_test...
+UVM_INFO ../tests/uart_test.sv(83) @ 0: uvm_test_top [uart_test] Test starting, 3 bytes will be sent
+UVM_INFO ../tb/example_tb_top.sv(49) @ 80000: reporter [TB_TOP] Reset deasserted
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 3715000: uvm_test_top.env.sb [uart_scoreboard] PASS [1]  data=8'he6 (11100110)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 5325000: uvm_test_top.env.sb [uart_scoreboard] PASS [2]  data=8'ha5 (10100101)
+UVM_INFO ../env/uart_scoreboard.sv(88) @ 6935000: uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'h3c (00111100)
+UVM_INFO ../tests/uart_test.sv(91) @ 27725000: uvm_test_top [uart_test] Test done.
+UVM_INFO ../env/uart_coverage.sv(177) @ 27725000: uvm_test_top.env.coverage [uart_coverage] 
+========== UART Functional Coverage ==========
+  cg_data_value       :  12.5%
+  cg_frame_integrity  :  41.7%
+  cg_parity_cfg       :  33.3%
+  cg_stop_bits        :  50.0%
+  cg_data_transitions :  16.7%
+  cg_error_types      :  50.0%
+  -----------------------------------------------
+  TOTAL               :  34.0%
+===============================================
+UVM_INFO ../env/uart_scoreboard.sv(104) @ 27725000: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=3  FAIL=0 ----
+
+--- UVM Report catcher Summary ---
+
+
+Number of demoted UVM_FATAL reports  :    0
+Number of demoted UVM_ERROR reports  :    0
+Number of demoted UVM_WARNING reports:    0
+Number of caught UVM_FATAL reports   :    0
+Number of caught UVM_ERROR reports   :    0
+Number of caught UVM_WARNING reports :    0
+
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :   10
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[RNTST]     1
+[TB_TOP]     1
+[TEST_DONE]     1
+[uart_coverage]     1
+[uart_scoreboard]     4
+[uart_test]     2
+Simulation complete via $finish(1) at time 27725 NS + 45
+xcelium> exit
+Simulation time at exit is: 27725000000 FS
+xmsim: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+
+coverage setup:
+  workdir  :  ./cov_work
+  dutinst  :  example_tb_top(example_tb_top)
+  scope    :  scope
+  testname :  uart_test_seed1_20260330_023921
+
+coverage files:
+  model(design data) :  ./cov_work/scope/icc_2aaeb7f8_0d98f4c3.ucm
+  data               :  ./cov_work/scope/uart_test_seed1_20260330_023921/icc_2aaeb7f8_0d98f4c3.ucd
+TOOL:	xrun(64)	24.03-s006: Exiting on Mar 30, 2026 at 02:40:02 PDT  (total: 00:00:09)
