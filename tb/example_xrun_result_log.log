@@ -1,81 +1,5 @@
 >>./run_xrun.sh
-Running from: ./scripts
-TOOL:	xrun(64)
-Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv)
-file: ../if/uart_if.sv
-	interface worklib.uart_if:sv
-		errors: 0, warnings: 0
-file: ../uart_vip_pkg.sv
-package uart_vip_pkg;
-                   |
-xmvlog: *W,TSNSPK (../uart_vip_pkg.sv,1|19): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
-	package worklib.uart_vip_pkg:sv
-		errors: 0, warnings: 1
-file: ../example_dut/uart_dut.sv
-	module worklib.uart_dut:sv
-		errors: 0, warnings: 0
-file: ../tb/example_tb_top.sv
-	module worklib.example_tb_top:sv
-		errors: 0, warnings: 0
-xmvlog: *W,SPDUSD: Include directory .. given but not used.
-xmvlog: *W,SPDUSD: Include directory ../common given but not used.
-xmvlog: *W,SPDUSD: Include directory ../agent given but not used.
-xmvlog: *W,SPDUSD: Include directory ../env given but not used.
-xmvlog: *W,SPDUSD: Include directory ../seq given but not used.
-xmvlog: *W,SPDUSD: Include directory ../tests given but not used.
-xmvlog: *W,SPDUSD: Include directory ../if given but not used.
-xmvlog: *W,SPDUSD: Include directory ../tb given but not used.
-	Total errors/warnings found outside modules and primitives:
-		errors: 0, warnings: 8
-	Elaborating the design hierarchy:
-		Caching library 'worklib' ....... Done
-	Top level design units:
-		uvm_pkg
-		cdns_uvmapi
-		cdns_assert2uvm_pkg
-		cdns_uvm_pkg
-		uart_vip_pkg
-		example_tb_top
-	Building instance overlay tables: .................... Done
-	Generating native compiled code:
-		worklib.uart_dut:sv <0x70f08765>
-			streams:  29, words: 13319
-		worklib.example_tb_top:sv <0x051afa12>
-			streams: 659, words: 753352
-		worklib.cdns_uvm_pkg:sv <0x40cb8f18>
-			streams: 172, words: 276655
-		worklib.cdns_uvmapi:svp <0x538b9174>
-			streams:  27, words: 30445
-		worklib.cdns_assert2uvm_pkg:sv <0x223d1a4c>
-			streams:   3, words:  1761
-		worklib.uvm_pkg:sv <0x19e0a4d0>
-			streams: 4534, words: 7150936
-	Building instance specific data structures.
-	Loading native compiled code:     .................... Done
-	Design hierarchy summary:
-		                        Instances  Unique
-		Modules:                        2       2
-		Interfaces:                     1       1
-		Verilog packages:               5       5
-		Registers:                 14,246  10,279
-		Scalar wires:                  13       -
-		Vectored wires:                18       -
-		Named events:                   4      12
-		Always blocks:                  4       4
-		Initial blocks:               291     159
-		Parallel blocks:               26      27
-		Cont. assignments:              7       8
-		Pseudo assignments:            12       -
-		Assertions:                     2       2
-		SV Class declarations:        201     315
-		SV Class specializations:     388     388
-		Process Clocks:                 3       1
-	Writing initial simulation snapshot: worklib.example_tb_top:sv
-Loading snapshot worklib.example_tb_top:sv .................... Done
-SVSEED default: 1
-
-Simulation SnapShot is worklib.example_tb_top:sv
-
+...
 xcelium> run
 
 UVM_INFO @ 0: reporter [RNTST] Running test uart_test...
@@ -88,7 +12,6 @@ UVM_INFO ../agent/uart_monitor.sv(99) @ 5325: uvm_test_top.env.agent.mon [uart_m
 UVM_INFO ../env/uart_scoreboard.sv(88) @ 6935: uvm_test_top.env.sb [uart_scoreboard] PASS [3]  data=8'h3c (00111100)
 UVM_INFO ../agent/uart_monitor.sv(99) @ 6935: uvm_test_top.env.agent.mon [uart_monitor] Captured item <- data=8'h3c (00111100)  parity_en=0 parity_odd=0 stop_bits=1  parity_ok=1 framing_ok=1
 UVM_INFO ../tests/uart_test.sv(91) @ 27725: uvm_test_top [uart_test] Test done.
-UVM_INFO /methodology/UVM/CDNS-1.1d/sv/src/base/uvm_objection.svh(1268) @ 27725: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
 UVM_INFO ../env/uart_scoreboard.sv(104) @ 27725: uvm_test_top.env.sb [uart_scoreboard] ---- Scoreboard Summary: PASS=3  FAIL=0 ----
 
 --- UVM Report catcher Summary ---
